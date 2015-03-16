@@ -64,8 +64,9 @@ Sim.prototype.addEntity = function (proto) {
 	}  // ARG CHECK
 	
 	if (!proto.time) {
+    var self = this;
 		proto.time = function () {
-			return this.sim.time();
+			return self.time();
 		};
 		
 		proto.setTimer = function (duration) {
@@ -73,17 +74,17 @@ Sim.prototype.addEntity = function (proto) {
 			
 			var ro = new Sim.Request(
 					this, 
-					this.sim.time(), 
-					this.sim.time() + duration);
+					self.time(), 
+					self.time() + duration);
 			
-			this.sim.queue.insert(ro);
+			self.queue.insert(ro);
 			return ro;
 		};
 		
 		proto.waitEvent = function (event) {
 			ARG_CHECK(arguments, 1, 1, Sim.Event);
 			
-			var ro = new Sim.Request(this, this.sim.time(), 0);
+			var ro = new Sim.Request(this, self.time(), 0);
 			
 			ro.source = event;
 			event.addWaitList(ro);
@@ -93,7 +94,7 @@ Sim.prototype.addEntity = function (proto) {
 		proto.queueEvent = function (event) {
 			ARG_CHECK(arguments, 1, 1, Sim.Event);
 			
-			var ro = new Sim.Request(this, this.sim.time(), 0);
+			var ro = new Sim.Request(this, self.time(), 0);
 			
 			ro.source = event;
 			event.addQueue(ro);
@@ -103,7 +104,7 @@ Sim.prototype.addEntity = function (proto) {
 		proto.useFacility = function (facility, duration) {
 			ARG_CHECK(arguments, 2, 2, Sim.Facility);
 			
-			var ro = new Sim.Request(this, this.sim.time(), 0);
+			var ro = new Sim.Request(this, self.time(), 0);
 			ro.source = facility;
 			facility.use(duration, ro);
 			return ro;
@@ -112,7 +113,7 @@ Sim.prototype.addEntity = function (proto) {
 		proto.putBuffer = function (buffer, amount) {
 			ARG_CHECK(arguments, 2, 2, Sim.Buffer);
 			
-			var ro = new Sim.Request(this, this.sim.time(), 0);
+			var ro = new Sim.Request(this, self.time(), 0);
 			ro.source = buffer;
 			buffer.put(amount, ro);
 			return ro;
@@ -121,7 +122,7 @@ Sim.prototype.addEntity = function (proto) {
 		proto.getBuffer = function (buffer, amount) {
 			ARG_CHECK(arguments, 2, 2, Sim.Buffer);
 			
-			var ro = new Sim.Request(this, this.sim.time(), 0);
+			var ro = new Sim.Request(this, self.time(), 0);
 			ro.source = buffer;
 			buffer.get(amount, ro);
 			return ro;
@@ -130,7 +131,7 @@ Sim.prototype.addEntity = function (proto) {
 		proto.putStore = function (store, obj) {
 			ARG_CHECK(arguments, 2, 2, Sim.Store);
 			
-			var ro = new Sim.Request(this, this.sim.time(), 0);
+			var ro = new Sim.Request(this, self.time(), 0);
 			ro.source = store;
 			store.put(obj, ro);
 			return ro;
@@ -139,7 +140,7 @@ Sim.prototype.addEntity = function (proto) {
 		proto.getStore = function (store, filter) {
 			ARG_CHECK(arguments, 1, 2, Sim.Store, Function);
 			
-			var ro = new Sim.Request(this, this.sim.time(), 0);
+			var ro = new Sim.Request(this, self.time(), 0);
 			ro.source = store;
 			store.get(filter, ro);
 			return ro;
@@ -148,19 +149,19 @@ Sim.prototype.addEntity = function (proto) {
 		proto.send = function (message, delay, entities) {
 			ARG_CHECK(arguments, 2, 3);
 			
-			var ro = new Sim.Request(this.sim, this.time(), this.time() + delay);
+			var ro = new Sim.Request(self, this.time(), this.time() + delay);
 			ro.source = this;
 			ro.msg = message;
 			ro.data = entities;
-			ro.deliver = this.sim.sendMessage;
+			ro.deliver = self.sendMessage;
 			
-			this.sim.queue.insert(ro);
+			self.queue.insert(ro);
 		};
 		
 		proto.log = function (message) {
 			ARG_CHECK(arguments, 1, 1);
 			
-			this.sim.log(message, this);
+			self.log(message, this);
 		};
 	}
 	
