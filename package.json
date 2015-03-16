@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Discrete Event Simulation in Javascript",
   "main": "index.js",
+  "files": ["src"],
   "directories": {
     "doc": "docs",
     "example": "examples",

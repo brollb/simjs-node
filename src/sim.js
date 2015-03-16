@@ -12,6 +12,7 @@
 var Queues = require('./queues'),
     Queue = Queues.Queue,
     PQueue = Queues.PQueue,
+    Request = require('./request'),
     Stats = require('./stats'),
     Population = Stats.Population,
     TimeSeries = Stats.TimeSeries,
