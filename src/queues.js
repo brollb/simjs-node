@@ -6,22 +6,22 @@
  * - Priority Queue
  */
 
-Sim.Queue = function (name) {
+Queue = function (name) {
 	this.name = name;
 	this.data = [];
 	this.timestamp = [];
-	this.stats = new Sim.Population();
+	this.stats = new Population();
 };
 
-Sim.Queue.prototype.top = function () {
+Queue.prototype.top = function () {
 	return this.data[0];
 };
 
-Sim.Queue.prototype.back = function () {
+Queue.prototype.back = function () {
 	return (this.data.length) ? this.data[this.data.length - 1] : undefined;
 };
 
-Sim.Queue.prototype.push = function (value, timestamp) {
+Queue.prototype.push = function (value, timestamp) {
 	ARG_CHECK(arguments, 2, 2);
 	this.data.push(value);
 	this.timestamp.push(timestamp);
@@ -29,7 +29,7 @@ Sim.Queue.prototype.push = function (value, timestamp) {
 	this.stats.enter(timestamp);
 };
 
-Sim.Queue.prototype.unshift = function (value, timestamp) {
+Queue.prototype.unshift = function (value, timestamp) {
 	ARG_CHECK(arguments, 2, 2);
 	this.data.unshift(value);
 	this.timestamp.unshift(timestamp);
@@ -37,7 +37,7 @@ Sim.Queue.prototype.unshift = function (value, timestamp) {
 	this.stats.enter(timestamp);
 };
 
-Sim.Queue.prototype.shift = function (timestamp) {
+Queue.prototype.shift = function (timestamp) {
 	ARG_CHECK(arguments, 1, 1);
 	
 	var value = this.data.shift();
@@ -47,7 +47,7 @@ Sim.Queue.prototype.shift = function (timestamp) {
 	return value;
 };
 
-Sim.Queue.prototype.pop = function (timestamp) {
+Queue.prototype.pop = function (timestamp) {
 	ARG_CHECK(arguments, 1, 1);
 	
 	var value = this.data.pop();
@@ -57,39 +57,39 @@ Sim.Queue.prototype.pop = function (timestamp) {
 	return value;
 };
 
-Sim.Queue.prototype.passby = function (timestamp) {
+Queue.prototype.passby = function (timestamp) {
 	ARG_CHECK(arguments, 1, 1);
 	
 	this.stats.enter(timestamp);
 	this.stats.leave(timestamp, timestamp);
 };
 
-Sim.Queue.prototype.finalize = function (timestamp) {
+Queue.prototype.finalize = function (timestamp) {
 	ARG_CHECK(arguments, 1, 1);
 	
 	this.stats.finalize(timestamp);
 };
 
-Sim.Queue.prototype.reset = function () {
+Queue.prototype.reset = function () {
 	this.stats.reset();
 };
 
-Sim.Queue.prototype.clear = function () {
+Queue.prototype.clear = function () {
 	this.reset();
 	this.data = [];
 	this.timestamp = [];
 };
 
-Sim.Queue.prototype.report = function () {
+Queue.prototype.report = function () {
 	return [this.stats.sizeSeries.average(),
 	        this.stats.durationSeries.average()];
 };
 
-Sim.Queue.prototype.empty = function () {
+Queue.prototype.empty = function () {
 	return this.data.length == 0;
 };
 
-Sim.Queue.prototype.size = function () {
+Queue.prototype.size = function () {
 	return this.data.length;
 };
 
@@ -99,12 +99,12 @@ Sim.Queue.prototype.size = function () {
  * Request object. Request.deliverAt is the key.
  */
 
-Sim.PQueue = function () {
+PQueue = function () {
 	this.data = [];
 	this.order = 0;
 };
 
-Sim.PQueue.prototype.greater = function(ro1, ro2) {
+PQueue.prototype.greater = function(ro1, ro2) {
 	if (ro1.deliverAt > ro2.deliverAt) return true;
 	if (ro1.deliverAt == ro2.deliverAt) 
 		return ro1.order > ro2.order;
@@ -118,7 +118,7 @@ Sim.PQueue.prototype.greater = function(ro1, ro2) {
  * Right (i) = 2i + 2
  */
 
-Sim.PQueue.prototype.insert = function (ro) {
+PQueue.prototype.insert = function (ro) {
 	ARG_CHECK(arguments, 1, 1);
 	ro.order = this.order ++;
 	
@@ -142,7 +142,7 @@ Sim.PQueue.prototype.insert = function (ro) {
 	a[index] = node;
 };
 
-Sim.PQueue.prototype.remove = function () {
+PQueue.prototype.remove = function () {
 	var a = this.data;
 	var len = a.length;
 	if (len <= 0) {
@@ -179,12 +179,7 @@ Sim.PQueue.prototype.remove = function () {
 	return top;
 };
 
-
-
-
-
-
-
-
-
-
+module.exports = {
+    Queue: Queue,
+    PQueue: PQueue
+};

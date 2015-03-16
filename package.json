@@ -1,0 +1,30 @@
+{
+  "name": "simjs",
+  "version": "1.0.0",
+  "description": "Discrete Event Simulation in Javascript",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://brollb@github.com/brollb/simjs-node"
+  },
+  "keywords": [
+    "discrete",
+    "event",
+    "simulation",
+    "javascript"
+  ],
+  "author": "",
+  "license": "LGPL",
+  "bugs": {
+    "url": "https://github.com/brollb/simjs-node/issues"
+  },
+  "homepage": "https://github.com/brollb/simjs-node"
+}

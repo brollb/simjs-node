@@ -1,8 +1,12 @@
-README
+# SimJS-node
+
+SimJS-node is a port of SimJS for use in NodeJS. 
+
+## About SimJS
 
 *SIM.JS is a general-purpose Discrete Event Simulation library written entirely in JavaScript.*
 
-More information and documentation at http://www.simjs.com
+More information and documentation at [http://www.simjs.com](http://www.simjs.com)
 
 SIM.JS is a library for modeling discrete time event systems: 
 

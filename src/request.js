@@ -3,7 +3,7 @@
  */
 
 // Public API
-Sim.Request = function (entity, currentTime, deliverAt) {
+Request = function (entity, currentTime, deliverAt) {
 	this.entity = entity;
 	this.scheduledAt = currentTime;
 	this.deliverAt = deliverAt;
@@ -12,7 +12,7 @@ Sim.Request = function (entity, currentTime, deliverAt) {
 	this.group = null;
 };
 
-Sim.Request.prototype.cancel = function () {
+Request.prototype.cancel = function () {
 	// Ask the main request to handle cancellation
 	if (this.group && this.group[0] != this) {
 		return this.group[0].cancel();
@@ -32,8 +32,8 @@ Sim.Request.prototype.cancel = function () {
 	}
 
 	if (this.source) {
-		if ((this.source instanceof Sim.Buffer)
-				|| (this.source instanceof Sim.Store)) {
+		if ((this.source instanceof Buffer)
+				|| (this.source instanceof Store)) {
 			this.source.progressPutQueue.call(this.source);
 			this.source.progressGetQueue.call(this.source);
 		} 
@@ -50,14 +50,14 @@ Sim.Request.prototype.cancel = function () {
 	}
 };
 
-Sim.Request.prototype.done = function (callback, context, argument) {
+Request.prototype.done = function (callback, context, argument) {
 	ARG_CHECK(arguments, 0, 3, Function, Object);
 	
 	this.callbacks.push([callback, context, argument]);
 	return this;
 };
 
-Sim.Request.prototype.waitUntil = function (delay, callback, context, argument) {
+Request.prototype.waitUntil = function (delay, callback, context, argument) {
 	ARG_CHECK(arguments, 1, 4, undefined, Function, Object);
 	if (this.noRenege) return this;
 	
@@ -67,11 +67,11 @@ Sim.Request.prototype.waitUntil = function (delay, callback, context, argument) 
 };
 
 
-Sim.Request.prototype.unlessEvent = function (event, callback, context, argument) {
+Request.prototype.unlessEvent = function (event, callback, context, argument) {
 	ARG_CHECK(arguments, 1, 4, undefined, Function, Object);
 	if (this.noRenege) return this;
 	
-	if (event instanceof Sim.Event) {
+	if (event instanceof Event) {
 		var ro = this._addRequest(0, callback, context, argument);
 		ro.msg = event;
 		event.addWaitList(ro);
@@ -87,13 +87,13 @@ Sim.Request.prototype.unlessEvent = function (event, callback, context, argument
 	return this;
 };
 
-Sim.Request.prototype.setData = function (data) {
+Request.prototype.setData = function (data) {
 	this.data = data;	
 	return this;
 };
 
 // Non Public API
-Sim.Request.prototype.deliver = function () {
+Request.prototype.deliver = function () {
 	if (this.cancelled) return;
 	this.cancel();
 	if (!this.callbacks) return;
@@ -110,7 +110,7 @@ Sim.Request.prototype.deliver = function () {
 	
 };
 
-Sim.Request.prototype.cancelRenegeClauses = function () {
+Request.prototype.cancelRenegeClauses = function () {
 	//this.cancel = this.Null;
 	//this.waitUntil = this.Null;
 	//this.unlessEvent = this.Null;
@@ -128,13 +128,13 @@ Sim.Request.prototype.cancelRenegeClauses = function () {
 	}
 };
 
-Sim.Request.prototype.Null = function () {
+Request.prototype.Null = function () {
 	return this;
 };
 
 // Private API
-Sim.Request.prototype._addRequest = function (deliverAt, callback, context, argument) {
-	var ro = new Sim.Request(
+Request.prototype._addRequest = function (deliverAt, callback, context, argument) {
+	var ro = new Request(
 			this.entity, 
 			this.scheduledAt,
 			deliverAt);
@@ -150,7 +150,7 @@ Sim.Request.prototype._addRequest = function (deliverAt, callback, context, argu
 	return ro;
 };
 
-Sim.Request.prototype._doCallback = function (source, msg, data) {
+Request.prototype._doCallback = function (source, msg, data) {
 	for (var i = 0; i < this.callbacks.length; i++) {
 		var callback = this.callbacks[i][0];
 		if (!callback) continue;
@@ -177,3 +177,5 @@ Sim.Request.prototype._doCallback = function (source, msg, data) {
 		context.callbackData = null;
 	}
 };
+
+module.exports = Request;
