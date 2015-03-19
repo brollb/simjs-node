@@ -8,12 +8,12 @@
  * http://en.wikipedia.org/wiki/Standard_deviation#Rapid_calculation_methods
  */
 
-DataSeries = function (name) {
+Sim.DataSeries = function (name) {
 	this.name = name;
 	this.reset();
 };
 
-DataSeries.prototype.reset = function () {
+Sim.DataSeries.prototype.reset = function () {
 	this.Count = 0;
 	this.W = 0.0;
 	this.A = 0.0;
@@ -29,7 +29,7 @@ DataSeries.prototype.reset = function () {
 	}
 };
 
-DataSeries.prototype.setHistogram = function (lower, upper, nbuckets) {
+Sim.DataSeries.prototype.setHistogram = function (lower, upper, nbuckets) {
 	ARG_CHECK(arguments, 3, 3);
 	
 	this.hLower = lower;
@@ -41,11 +41,11 @@ DataSeries.prototype.setHistogram = function (lower, upper, nbuckets) {
 	}
 };
 
-DataSeries.prototype.getHistogram = function () {
+Sim.DataSeries.prototype.getHistogram = function () {
 	return this.histogram;
 };
 
-DataSeries.prototype.record = function (value, weight) {
+Sim.DataSeries.prototype.record = function (value, weight) {
 	ARG_CHECK(arguments, 1, 2);
 	
 	var w = (weight === undefined) ? 1 : weight;
@@ -83,39 +83,39 @@ DataSeries.prototype.record = function (value, weight) {
 	//print("\tW=" + this.W + " A=" + this.A + " Q=" + this.Q + "\n");
 };
 
-DataSeries.prototype.count = function () {
+Sim.DataSeries.prototype.count = function () {
 	return this.Count;
 };
 
-DataSeries.prototype.min = function () {
+Sim.DataSeries.prototype.min = function () {
 	return this.Min;
 };
 
-DataSeries.prototype.max = function () {
+Sim.DataSeries.prototype.max = function () {
 	return this.Max;
 };
 
-DataSeries.prototype.range = function () {
+Sim.DataSeries.prototype.range = function () {
 	return this.Max - this.Min;
 };
 
-DataSeries.prototype.sum = function () {
+Sim.DataSeries.prototype.sum = function () {
 	return this.Sum;
 };
 
-DataSeries.prototype.sumWeighted = function () {
+Sim.DataSeries.prototype.sumWeighted = function () {
 	return this.A * this.W;
 };
 
-DataSeries.prototype.average = function () {
+Sim.DataSeries.prototype.average = function () {
 	return this.A;
 };
 
-DataSeries.prototype.variance = function () {
+Sim.DataSeries.prototype.variance = function () {
 	return this.Q / this.W;
 };
 
-DataSeries.prototype.deviation = function () {
+Sim.DataSeries.prototype.deviation = function () {
 	return Math.sqrt(this.variance());
 };
 
@@ -123,26 +123,26 @@ DataSeries.prototype.deviation = function () {
 /** Time series
  * 
  */
-TimeSeries = function (name) {
-	this.dataSeries = new DataSeries(name);
+Sim.TimeSeries = function (name) {
+	this.dataSeries = new Sim.DataSeries(name);
 };
 
-TimeSeries.prototype.reset = function () {
+Sim.TimeSeries.prototype.reset = function () {
 	this.dataSeries.reset();
 	this.lastValue = NaN;
 	this.lastTimestamp = NaN;
 };
 
-TimeSeries.prototype.setHistogram = function (lower, upper, nbuckets) {
+Sim.TimeSeries.prototype.setHistogram = function (lower, upper, nbuckets) {
 	ARG_CHECK(arguments, 3, 3);
 	this.dataSeries.setHistogram(lower, upper, nbuckets);
 };
 
-TimeSeries.prototype.getHistogram = function () {
+Sim.TimeSeries.prototype.getHistogram = function () {
 	return this.dataSeries.getHistogram();
 };
 
-TimeSeries.prototype.record = function (value, timestamp) {
+Sim.TimeSeries.prototype.record = function (value, timestamp) {
 	ARG_CHECK(arguments, 2, 2);
 	
 	if (!isNaN(this.lastTimestamp)) {
@@ -153,41 +153,41 @@ TimeSeries.prototype.record = function (value, timestamp) {
 	this.lastTimestamp = timestamp;
 };
 
-TimeSeries.prototype.finalize = function (timestamp) {
+Sim.TimeSeries.prototype.finalize = function (timestamp) {
 	ARG_CHECK(arguments, 1, 1);
 	
 	this.record(NaN, timestamp);
 };
 
-TimeSeries.prototype.count = function () {
+Sim.TimeSeries.prototype.count = function () {
 	return this.dataSeries.count();
 };
 
-TimeSeries.prototype.min = function () {
+Sim.TimeSeries.prototype.min = function () {
 	return this.dataSeries.min();
 };
 
-TimeSeries.prototype.max = function () {
+Sim.TimeSeries.prototype.max = function () {
 	return this.dataSeries.max();
 };
 
-TimeSeries.prototype.range = function () {
+Sim.TimeSeries.prototype.range = function () {
 	return this.dataSeries.range();
 };
 
-TimeSeries.prototype.sum = function () {
+Sim.TimeSeries.prototype.sum = function () {
 	return this.dataSeries.sum();
 };
 
-TimeSeries.prototype.average = function () {
+Sim.TimeSeries.prototype.average = function () {
 	return this.dataSeries.average();
 };
 
-TimeSeries.prototype.deviation = function () {
+Sim.TimeSeries.prototype.deviation = function () {
 	return this.dataSeries.deviation();
 };
 
-TimeSeries.prototype.variance = function () {
+Sim.TimeSeries.prototype.variance = function () {
 	return this.dataSeries.variance();
 };
 
@@ -195,27 +195,27 @@ TimeSeries.prototype.variance = function () {
  * 
  */
 
-Population = function (name) {
+Sim.Population = function (name) {
 	this.name = name;
 	this.population = 0;
-	this.sizeSeries = new TimeSeries();
-	this.durationSeries = new DataSeries();
+	this.sizeSeries = new Sim.TimeSeries();
+	this.durationSeries = new Sim.DataSeries();
 };
 
-Population.prototype.reset = function () {
+Sim.Population.prototype.reset = function () {
 	this.sizeSeries.reset();
 	this.durationSeries.reset();
 	this.population = 0;
 };
 
-Population.prototype.enter = function (timestamp) {
+Sim.Population.prototype.enter = function (timestamp) {
 	ARG_CHECK(arguments, 1, 1);
 	
 	this.population ++;
 	this.sizeSeries.record(this.population, timestamp);
 };
 
-Population.prototype.leave = function (arrivalAt, leftAt) {
+Sim.Population.prototype.leave = function (arrivalAt, leftAt) {
 	ARG_CHECK(arguments, 2, 2);
 	
 	this.population --;
@@ -223,16 +223,10 @@ Population.prototype.leave = function (arrivalAt, leftAt) {
 	this.durationSeries.record(leftAt - arrivalAt);
 };
 
-Population.prototype.current = function () {
+Sim.Population.prototype.current = function () {
 	return this.population;
 };
 
-Population.prototype.finalize = function (timestamp) {
+Sim.Population.prototype.finalize = function (timestamp) {
 	this.sizeSeries.finalize(timestamp);
-};
-
-module.exports = {
-    Population: Population,
-    DataSeries: DataSeries,
-    TimeSeries: TimeSeries
 };

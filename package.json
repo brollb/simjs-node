@@ -2,7 +2,7 @@
   "name": "simjs",
   "version": "1.0.0",
   "description": "Discrete Event Simulation in Javascript",
-  "main": "index.js",
+  "main": "release/sim-node-0.25.js",
   "files": ["src"],
   "directories": {
     "doc": "docs",
@@ -10,7 +10,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "cd release && ./makerelease.sh"
   },
   "repository": {
     "type": "git",

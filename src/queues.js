@@ -6,22 +6,22 @@
  * - Priority Queue
  */
 
-Queue = function (name) {
+Sim.Queue = function (name) {
 	this.name = name;
 	this.data = [];
 	this.timestamp = [];
 	this.stats = new Population();
 };
 
-Queue.prototype.top = function () {
+Sim.Queue.prototype.top = function () {
 	return this.data[0];
 };
 
-Queue.prototype.back = function () {
+Sim.Queue.prototype.back = function () {
 	return (this.data.length) ? this.data[this.data.length - 1] : undefined;
 };
 
-Queue.prototype.push = function (value, timestamp) {
+Sim.Queue.prototype.push = function (value, timestamp) {
 	ARG_CHECK(arguments, 2, 2);
 	this.data.push(value);
 	this.timestamp.push(timestamp);
@@ -29,7 +29,7 @@ Queue.prototype.push = function (value, timestamp) {
 	this.stats.enter(timestamp);
 };
 
-Queue.prototype.unshift = function (value, timestamp) {
+Sim.Queue.prototype.unshift = function (value, timestamp) {
 	ARG_CHECK(arguments, 2, 2);
 	this.data.unshift(value);
 	this.timestamp.unshift(timestamp);
@@ -37,7 +37,7 @@ Queue.prototype.unshift = function (value, timestamp) {
 	this.stats.enter(timestamp);
 };
 
-Queue.prototype.shift = function (timestamp) {
+Sim.Queue.prototype.shift = function (timestamp) {
 	ARG_CHECK(arguments, 1, 1);
 	
 	var value = this.data.shift();
@@ -47,7 +47,7 @@ Queue.prototype.shift = function (timestamp) {
 	return value;
 };
 
-Queue.prototype.pop = function (timestamp) {
+Sim.Queue.prototype.pop = function (timestamp) {
 	ARG_CHECK(arguments, 1, 1);
 	
 	var value = this.data.pop();
@@ -57,39 +57,39 @@ Queue.prototype.pop = function (timestamp) {
 	return value;
 };
 
-Queue.prototype.passby = function (timestamp) {
+Sim.Queue.prototype.passby = function (timestamp) {
 	ARG_CHECK(arguments, 1, 1);
 	
 	this.stats.enter(timestamp);
 	this.stats.leave(timestamp, timestamp);
 };
 
-Queue.prototype.finalize = function (timestamp) {
+Sim.Queue.prototype.finalize = function (timestamp) {
 	ARG_CHECK(arguments, 1, 1);
 	
 	this.stats.finalize(timestamp);
 };
 
-Queue.prototype.reset = function () {
+Sim.Queue.prototype.reset = function () {
 	this.stats.reset();
 };
 
-Queue.prototype.clear = function () {
+Sim.Queue.prototype.clear = function () {
 	this.reset();
 	this.data = [];
 	this.timestamp = [];
 };
 
-Queue.prototype.report = function () {
+Sim.Queue.prototype.report = function () {
 	return [this.stats.sizeSeries.average(),
 	        this.stats.durationSeries.average()];
 };
 
-Queue.prototype.empty = function () {
+Sim.Queue.prototype.empty = function () {
 	return this.data.length == 0;
 };
 
-Queue.prototype.size = function () {
+Sim.Queue.prototype.size = function () {
 	return this.data.length;
 };
 
@@ -99,12 +99,12 @@ Queue.prototype.size = function () {
  * Request object. Request.deliverAt is the key.
  */
 
-PQueue = function () {
+Sim.PQueue = function () {
 	this.data = [];
 	this.order = 0;
 };
 
-PQueue.prototype.greater = function(ro1, ro2) {
+Sim.PQueue.prototype.greater = function(ro1, ro2) {
 	if (ro1.deliverAt > ro2.deliverAt) return true;
 	if (ro1.deliverAt == ro2.deliverAt) 
 		return ro1.order > ro2.order;
@@ -118,7 +118,7 @@ PQueue.prototype.greater = function(ro1, ro2) {
  * Right (i) = 2i + 2
  */
 
-PQueue.prototype.insert = function (ro) {
+Sim.PQueue.prototype.insert = function (ro) {
 	ARG_CHECK(arguments, 1, 1);
 	ro.order = this.order ++;
 	
@@ -142,7 +142,7 @@ PQueue.prototype.insert = function (ro) {
 	a[index] = node;
 };
 
-PQueue.prototype.remove = function () {
+Sim.PQueue.prototype.remove = function () {
 	var a = this.data;
 	var len = a.length;
 	if (len <= 0) {
@@ -177,9 +177,4 @@ PQueue.prototype.remove = function () {
 	}
 	a[index] = node;
 	return top;
-};
-
-module.exports = {
-    Queue: Queue,
-    PQueue: PQueue
 };

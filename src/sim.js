@@ -9,14 +9,6 @@
 /** Simulator Object
  * 
  */
-var Queues = require('./queues'),
-    Queue = Queues.Queue,
-    PQueue = Queues.PQueue,
-    Request = require('./request'),
-    Stats = require('./stats'),
-    Population = Stats.Population,
-    TimeSeries = Stats.TimeSeries,
-    DataSeries = Stats.DataSeries;
 
 function Sim() {
 	this.simTime = 0;
@@ -888,14 +880,3 @@ function ARG_CHECK(found, expMin, expMax) {
 		}   // ARG_CHECK
 	}   // ARG_CHECK
 }   // ARG_CHECK
-
-Sim.Queue = Queue;
-Sim.PQueue = PQueue;
-Sim.Request = Request;
-
-// Stats 
-Sim.Population = Population;
-Sim.DataSeries = DataSeries;
-Sim.TimeSeries = TimeSeries;
-
-module.exports = Sim;

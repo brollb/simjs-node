@@ -56,14 +56,28 @@ function run_test {
 
 run_test sim-$VERSION-debug.js
 
+## Create the nodejs versions
+cat ../src/sim.js >> sim-node-tmp-$VERSION.js
+cat ../src/request.js >> sim-node-tmp-$VERSION.js
+cat ../src/queues.js >> sim-node-tmp-$VERSION.js
+cat ../src/stats.js >> sim-node-tmp-$VERSION.js
+echo "module.exports = Sim;" >> sim-node-tmp-$VERSION.js
+
+cat ../src/random.js >> random-node-tmp-$VERSION.js
+echo "module.exports = Random;" >> random-node-tmp-$VERSION.js
+
 ## Remove some code
 cat sim-$VERSION-debug.js | grep -v "ARG_CHECK" > sim-$VERSION-tmp.js
 cat random-$VERSION-debug.js | grep -v "ARG_CHECK" > random-$VERSION-tmp.js
+
+cat sim-node-tmp-$VERSION.js | grep -v "ARG_CHECK" > sim-node-$VERSION.js
+cat random-node-tmp-$VERSION.js | grep -v "ARG_CHECK" > random-node-$VERSION.js
 
 ## Minify
 java -jar compiler.jar --js sim-$VERSION-tmp.js --js_output_file sim-$VERSION.js
 java -jar compiler.jar --js random-$VERSION-tmp.js --js_output_file random-$VERSION.js
 
+## Clean up
 rm sim-$VERSION-tmp.js
 rm random-$VERSION-tmp.js
 

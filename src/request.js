@@ -3,7 +3,7 @@
  */
 
 // Public API
-Request = function (entity, currentTime, deliverAt) {
+Sim.Request = function (entity, currentTime, deliverAt) {
 	this.entity = entity;
 	this.scheduledAt = currentTime;
 	this.deliverAt = deliverAt;
@@ -12,7 +12,7 @@ Request = function (entity, currentTime, deliverAt) {
 	this.group = null;
 };
 
-Request.prototype.cancel = function () {
+Sim.Request.prototype.cancel = function () {
 	// Ask the main request to handle cancellation
 	if (this.group && this.group[0] != this) {
 		return this.group[0].cancel();
@@ -50,14 +50,14 @@ Request.prototype.cancel = function () {
 	}
 };
 
-Request.prototype.done = function (callback, context, argument) {
+Sim.Request.prototype.done = function (callback, context, argument) {
 	ARG_CHECK(arguments, 0, 3, Function, Object);
 	
 	this.callbacks.push([callback, context, argument]);
 	return this;
 };
 
-Request.prototype.waitUntil = function (delay, callback, context, argument) {
+Sim.Request.prototype.waitUntil = function (delay, callback, context, argument) {
 	ARG_CHECK(arguments, 1, 4, undefined, Function, Object);
 	if (this.noRenege) return this;
 	
@@ -67,7 +67,7 @@ Request.prototype.waitUntil = function (delay, callback, context, argument) {
 };
 
 
-Request.prototype.unlessEvent = function (event, callback, context, argument) {
+Sim.Request.prototype.unlessEvent = function (event, callback, context, argument) {
 	ARG_CHECK(arguments, 1, 4, undefined, Function, Object);
 	if (this.noRenege) return this;
 	
@@ -87,13 +87,13 @@ Request.prototype.unlessEvent = function (event, callback, context, argument) {
 	return this;
 };
 
-Request.prototype.setData = function (data) {
+Sim.Request.prototype.setData = function (data) {
 	this.data = data;	
 	return this;
 };
 
 // Non Public API
-Request.prototype.deliver = function () {
+Sim.Request.prototype.deliver = function () {
 	if (this.cancelled) return;
 	this.cancel();
 	if (!this.callbacks) return;
@@ -110,7 +110,7 @@ Request.prototype.deliver = function () {
 	
 };
 
-Request.prototype.cancelRenegeClauses = function () {
+Sim.Request.prototype.cancelRenegeClauses = function () {
 	//this.cancel = this.Null;
 	//this.waitUntil = this.Null;
 	//this.unlessEvent = this.Null;
@@ -128,13 +128,13 @@ Request.prototype.cancelRenegeClauses = function () {
 	}
 };
 
-Request.prototype.Null = function () {
+Sim.Request.prototype.Null = function () {
 	return this;
 };
 
 // Private API
-Request.prototype._addRequest = function (deliverAt, callback, context, argument) {
-	var ro = new Request(
+Sim.Request.prototype._addRequest = function (deliverAt, callback, context, argument) {
+	var ro = new Sim.Request(
 			this.entity, 
 			this.scheduledAt,
 			deliverAt);
@@ -150,7 +150,7 @@ Request.prototype._addRequest = function (deliverAt, callback, context, argument
 	return ro;
 };
 
-Request.prototype._doCallback = function (source, msg, data) {
+Sim.Request.prototype._doCallback = function (source, msg, data) {
 	for (var i = 0; i < this.callbacks.length; i++) {
 		var callback = this.callbacks[i][0];
 		if (!callback) continue;
@@ -177,5 +177,3 @@ Request.prototype._doCallback = function (source, msg, data) {
 		context.callbackData = null;
 	}
 };
-
-module.exports = Request;
