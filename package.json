@@ -1,9 +1,9 @@
 {
   "name": "simjs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Discrete Event Simulation in Javascript",
-  "main": "release/sim-node-0.25.js",
-  "files": ["src"],
+  "main": "dist/sim-node-0.25.js",
+  "files": ["dist"],
   "directories": {
     "doc": "docs",
     "example": "examples",

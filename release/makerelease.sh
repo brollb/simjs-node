@@ -72,6 +72,7 @@ cat random-$VERSION-debug.js | grep -v "ARG_CHECK" > random-$VERSION-tmp.js
 
 cat sim-node-tmp-$VERSION.js | grep -v "ARG_CHECK" > sim-node-$VERSION.js
 cat random-node-tmp-$VERSION.js | grep -v "ARG_CHECK" > random-node-$VERSION.js
+mv sim-node-$VERSION.js random-node-$VERSION.js ../dist/
 
 ## Minify
 java -jar compiler.jar --js sim-$VERSION-tmp.js --js_output_file sim-$VERSION.js
